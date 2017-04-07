@@ -1,6 +1,7 @@
 import gulp from 'gulp';
 import sourcemaps from 'gulp-sourcemaps';
 import merge from 'merge2';
+import del from 'del'
 
 /*
     typescript
@@ -9,7 +10,7 @@ import typescript from 'gulp-typescript';
 const tsProject = typescript.createProject('tsconfig.json');
 const es6Out = tsProject.config.compilerOptions.outDir;
 const dtsOut = tsProject.config.compilerOptions.declarationDir;
-gulp.task('tsc', () => {
+gulp.task('tsc', ['clean'], () => {
     const tsResult = tsProject.src()
         .pipe(sourcemaps.init())
         .pipe(tsProject());
@@ -39,7 +40,8 @@ gulp.task('es5', ['tsc'], () => {
 });
 
 
+gulp.task('clean', () => del(['./dist/*']));
 
-gulp.task('watch', ['tsc'], () => gulp.watch(src, ['tsc']));
+gulp.task('watch', ['tsc'], () => gulp.watch('./src/**/*', ['tsc']));
 
 gulp.task('default', ['tsc']);
