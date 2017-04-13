@@ -1,37 +1,49 @@
+// TODO https://github.com/ivogabe/gulp-typescript/issues/295
+
 import gulp from 'gulp';
+import {PluginError, log} from 'gulp-util';
 import sourcemaps from 'gulp-sourcemaps';
 import merge from 'merge2';
 import del from 'del'
 
 /*
-    typescript
+    clean, watch, default
+*/
+gulp.task('clean', () => del(['./dist/*']));
+gulp.task('watch', ['es5'], () => gulp.watch('./src/**/*', ['es5']));
+gulp.task('default', ['es5']);
+
+/*
+    typescript: transpile to es6, with definitions and source maps.
 */
 import typescript from 'gulp-typescript';
 const tsProject = typescript.createProject('tsconfig.json');
 const es6Out = tsProject.config.compilerOptions.outDir;
 const dtsOut = tsProject.config.compilerOptions.declarationDir;
-gulp.task('tsc', ['clean'], () => {
+gulp.task('tsc', ['clean'], (cb) => {
+    var tscErrorCount = 0;
     const tsResult = tsProject.src()
         .pipe(sourcemaps.init())
-        .pipe(tsProject());
+        .pipe(tsProject())
+        .on('error', (er) => (tscErrorCount++, new PluginError('tsc', er, {showStack: false})))
+        .on('finish', () => tscErrorCount && process.exit(1));
 
     return merge([
         tsResult.dts
             .pipe(gulp.dest(dtsOut)),
-
         tsResult.js
             .pipe(sourcemaps.write('.'))
             .pipe(gulp.dest(es6Out)),
-    ])
+    ]);
 });
 
 /*
-    babel
+    babel: transpile to es5 with sourcemaps and plugins (see package.json).
 */
 import babel from 'gulp-babel';
 const es6In = es6Out + '/**/*.js';
 const es5Out = './dist/es5';
-gulp.task('es5', ['tsc'], () => {
+gulp.task('es5', ['tsc'], (cb) => {
     return gulp.src(es6In)
         .pipe(sourcemaps.init({loadmaps: true}))
         .pipe(babel())
@@ -39,9 +51,3 @@ gulp.task('es5', ['tsc'], () => {
         .pipe(gulp.dest(es5Out));
 });
 
-
-gulp.task('clean', () => del(['./dist/*']));
-
-gulp.task('watch', ['tsc'], () => gulp.watch('./src/**/*', ['tsc']));
-
-gulp.task('default', ['tsc']);
