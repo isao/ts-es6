@@ -1,10 +1,18 @@
-// TODO https://github.com/ivogabe/gulp-typescript/issues/295
-
+// TODO
+// https://github.com/ivogabe/gulp-typescript/issues/295
+// https://github.com/bsara/gulp-fail
+// https://github.com/robrich/gulp-if
+// https://github.com/OverZealous/lazypipe
+// https://babeljs.io/docs/plugins/preset-env/
+// https://babeljs.io/docs/plugins/transform-runtime/
+// https://babeljs.io/docs/plugins/minify-dead-code-elimination/
 import gulp from 'gulp';
-import {PluginError, log} from 'gulp-util';
+import gulpIf from 'gulp-if';
+import {env, log, PluginError} from 'gulp-util';
 import sourcemaps from 'gulp-sourcemaps';
 import merge from 'merge2';
 import del from 'del'
+import uglify from 'gulp-uglify';
 
 /*
     clean, watch, default
@@ -22,6 +30,7 @@ const es6Out = tsProject.config.compilerOptions.outDir;
 const dtsOut = tsProject.config.compilerOptions.declarationDir;
 gulp.task('tsc', ['clean'], (cb) => {
     var tscErrorCount = 0;
+
     const tsResult = tsProject.src()
         .pipe(sourcemaps.init())
         .pipe(tsProject())
@@ -38,7 +47,7 @@ gulp.task('tsc', ['clean'], (cb) => {
 });
 
 /*
-    babel: transpile to es5 with sourcemaps and plugins (see package.json).
+    babel: transpile es6 to es5, with sourcemaps and plugins (see package.json).
 */
 import babel from 'gulp-babel';
 const es6In = es6Out + '/**/*.js';
@@ -47,7 +56,7 @@ gulp.task('es5', ['tsc'], (cb) => {
     return gulp.src(es6In)
         .pipe(sourcemaps.init({loadmaps: true}))
         .pipe(babel())
+        .pipe(gulpIf(env.compress, uglify()))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(es5Out));
 });
-

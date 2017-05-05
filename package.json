@@ -17,24 +17,29 @@
   "devDependencies": {
     "@types/tape": "^4.2.29",
     "babel-plugin-closure-elimination": "^1.1.14",
+    "babel-plugin-minify-constant-folding": "0.0.4",
+    "babel-plugin-tailcall-optimization": "^1.0.11",
+    "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.13.2",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
+    "gulp-if": "^2.0.2",
     "gulp-typescript": "^3.1.6",
+    "gulp-uglify": "^2.1.2",
+    "gulp-util": "^3.0.8",
     "merge2": "^1.0.3",
     "tape": "^4.6.3",
     "typescript": "^2.2.2"
-  },
-  "dependencies": {
-    "babel-polyfill": "^6.23.0"
   },
   "babel": {
     "presets": [
       "es2015"
     ],
     "plugins": [
-      "closure-elimination"
+      "closure-elimination",
+      "minify-constant-folding",
+      "tailcall-optimization"
     ]
   }
 }
