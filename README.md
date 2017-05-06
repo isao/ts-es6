@@ -21,4 +21,4 @@ Build artifacts look like:
         └── index.js.map
 
 
-Inspired by github.com:filp/ts-es6-boilerplate.git
+Inspired by http://github.com/filp/ts-es6-boilerplate.git and http://www.typescriptlang.org/docs/handbook/gulp.html
