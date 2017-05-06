@@ -9,10 +9,8 @@
 import gulp from 'gulp';
 import gulpIf from 'gulp-if';
 import {env, log, PluginError} from 'gulp-util';
-import sourcemaps from 'gulp-sourcemaps';
 import merge from 'merge2';
 import del from 'del'
-import uglify from 'gulp-uglify';
 
 /*
     clean, watch, default
@@ -25,6 +23,8 @@ gulp.task('default', ['es5']);
     typescript: transpile to es6, with definitions and source maps.
 */
 import typescript from 'gulp-typescript';
+import sourcemaps from 'gulp-sourcemaps';
+import uglify from 'gulp-uglify';
 const tsProject = typescript.createProject('tsconfig.json');
 const es6Out = tsProject.config.compilerOptions.outDir;
 const dtsOut = tsProject.config.compilerOptions.declarationDir;
@@ -34,7 +34,7 @@ gulp.task('tsc', ['clean'], (cb) => {
     const tsResult = tsProject.src()
         .pipe(sourcemaps.init())
         .pipe(tsProject())
-        .on('error', (er) => (tscErrorCount++, new PluginError('tsc', er, {showStack: false})))
+        .on('error', (er) => new PluginError('tsc', er, {count: tscErrorCount++}))
         .on('finish', () => tscErrorCount && process.exit(1));
 
     return merge([
