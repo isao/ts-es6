@@ -5,6 +5,7 @@ Boilerplate for using Gulp to transpile TypeScript > es6/es2015 > Babel > es5.
 Include sourcemaps, and an optional minification (via Uglify) command line option, i.e. `gulp --compress`. 
 
 Build artifacts look like:
+
     dist
     ├── dts
     │   └── index.d.ts
