@@ -24,7 +24,6 @@ gulp.task('default', ['es5']);
 */
 import typescript from 'gulp-typescript';
 import sourcemaps from 'gulp-sourcemaps';
-import uglify from 'gulp-uglify';
 const tsProject = typescript.createProject('tsconfig.json');
 const es6Out = tsProject.config.compilerOptions.outDir;
 const dtsOut = tsProject.config.compilerOptions.declarationDir;
@@ -50,6 +49,7 @@ gulp.task('tsc', ['clean'], (cb) => {
     babel: transpile es6 to es5, with sourcemaps and plugins (see package.json).
 */
 import babel from 'gulp-babel';
+import uglify from 'gulp-uglify';
 const es6In = es6Out + '/**/*.js';
 const es5Out = './dist/es5';
 gulp.task('es5', ['tsc'], (cb) => {
