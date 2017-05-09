@@ -47,13 +47,15 @@ gulp.task('rollup', ['tsc'], (cb) => {
 });
 
 /*
-
+    transpile es6 to es5, and optionally compress it.
 */
 import babel from 'gulp-babel';
+import uglify from 'gulp-uglify';
 gulp.task('es5', ['rollup'], (cb) => {
     gulp.src('dist/es6/bundle.js')
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(babel())
+        .pipe(gulpIf(env.compress, uglify()))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist'));
 });
