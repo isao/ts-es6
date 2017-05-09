@@ -85,5 +85,5 @@ gulp.task('es5', ['bundle'], (cb) => {
 */
 gulp.task('clean', () => del([destDir + '/*']));
 gulp.task('watch', ['bundle'], () => gulp.watch(sources, ['bundle']));
-gulp.task('default', ['bundle']);
+gulp.task('default', ['build']);
 gulp.task('build', ['es5']);
