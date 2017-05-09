@@ -47,6 +47,19 @@ gulp.task('rollup', ['tsc'], (cb) => {
 });
 
 /*
+
+*/
+import babel from 'gulp-babel';
+gulp.task('es5', ['rollup'], (cb) => {
+    gulp.src('dist/es6/bundle.js')
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(babel())
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('dist'));
+});
+
+
+/*
     clean, watch, default
 */
 gulp.task('clean', () => del(['./dist/*']));
