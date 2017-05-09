@@ -1,24 +1,24 @@
 {
     "compilerOptions": {
         "declaration": true,
-        "declarationDir": "dist/dts/",
+        "declarationDir": "dist/dts/", // Generated *.d.ts files go here.
         "experimentalDecorators": true,
         "lib": ["ES6", "WebWorker"],
         "module": "es2015",
         "moduleResolution": "node",
         "newLine": "lf",
         "noUnusedLocals": true,
-        "outDir": "dist/es6/",
+        "outDir": "dist/es6/", // Generate ES2015 *.js files gp here.
         "pretty": true,
         "sourceMap": true,
-        "strict": true, // v2.3: alwaysStrict, noImplicitAny, strictNullChecks, noImplicitThis
+        "strict": true, // Sets alwaysStrict, noImplicitAny, strictNullChecks, noImplicitThis
         "target": "es2015"
     },
     "exclude": ["node_modules"],
     "include": ["src/**/*"],
 
     "gulpOptions": { // Only used by the gulp tasks.
-        "entry": "dist/es6/index.js", // Output file created by rollupjs.
-        "destDir": "dist/"
+        "entry": "dist/es6/index.js", // Entry point for ES2015 module rollup.
+        "destDir": "dist/" // ES5 *.js bundle goes here.
     }
 }
