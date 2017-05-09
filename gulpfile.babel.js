@@ -1,11 +1,3 @@
-// TODO
-// https://github.com/ivogabe/gulp-typescript/issues/295
-// https://github.com/bsara/gulp-fail
-// https://github.com/robrich/gulp-if
-// https://github.com/OverZealous/lazypipe
-// https://babeljs.io/docs/plugins/preset-env/
-// https://babeljs.io/docs/plugins/transform-runtime/
-// https://babeljs.io/docs/plugins/minify-dead-code-elimination/
 import gulp from 'gulp';
 import gulpIf from 'gulp-if';
 import {env, log, PluginError} from 'gulp-util';
@@ -16,8 +8,8 @@ import del from 'del'
     clean, watch, default
 */
 gulp.task('clean', () => del(['./dist/*']));
-gulp.task('watch', ['es5'], () => gulp.watch('./src/**/*', ['es5']));
-gulp.task('default', ['es5']);
+gulp.task('watch', ['rollup'], () => gulp.watch('./src/**/*', ['rollup']));
+gulp.task('default', ['rollup']);
 
 /*
     typescript: transpile to es6, with definitions and source maps.
@@ -45,18 +37,29 @@ gulp.task('tsc', ['clean'], (cb) => {
     ]);
 });
 
+import {rollup} from 'rollup';
+
+gulp.task('rollup', ['tsc'], (cb) => {
+    return rollup({entry: 'dist/es6/index.js'})
+        .then((bundle) => bundle.write({
+            format: 'es',
+            dest: 'dist/es6/bundle.js'
+        }));
+});
+
+
 /*
     babel: transpile es6 to es5, with sourcemaps and plugins (see package.json).
 */
-import babel from 'gulp-babel';
-import uglify from 'gulp-uglify';
-const es6In = es6Out + '/**/*.js';
-const es5Out = './dist/es5';
-gulp.task('es5', ['tsc'], (cb) => {
-    return gulp.src(es6In)
-        .pipe(sourcemaps.init({loadmaps: true}))
-        .pipe(babel())
-        .pipe(gulpIf(env.compress, uglify()))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(es5Out));
-});
+//import babel from 'gulp-babel';
+//import uglify from 'gulp-uglify';
+//const es6In = es6Out + '/**/*.js';
+//const es5Out = './dist/es5';
+//gulp.task('es5', ['tsc'], (cb) => {
+//    return gulp.src(es6In)
+//        .pipe(sourcemaps.init({loadmaps: true}))
+//        .pipe(babel())
+//        .pipe(gulpIf(env.compress, uglify()))
+//        .pipe(sourcemaps.write('.'))
+//        .pipe(gulp.dest(es5Out));
+//});

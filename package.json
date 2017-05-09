@@ -29,6 +29,8 @@
     "gulp-uglify": "^2.1.2",
     "gulp-util": "^3.0.8",
     "merge2": "^1.0.3",
+    "rollup": "^0.41.6",
+    "rollup-plugin-sourcemaps": "^0.4.2",
     "tape": "^4.6.3",
     "typescript": "^2.2.2"
   },
