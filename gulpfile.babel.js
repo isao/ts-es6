@@ -1,11 +1,3 @@
-// TODO
-// https://github.com/ivogabe/gulp-typescript/issues/295
-// https://github.com/bsara/gulp-fail
-// https://github.com/robrich/gulp-if
-// https://github.com/OverZealous/lazypipe
-// https://babeljs.io/docs/plugins/preset-env/
-// https://babeljs.io/docs/plugins/transform-runtime/
-// https://babeljs.io/docs/plugins/minify-dead-code-elimination/
 import gulp from 'gulp';
 import gulpIf from 'gulp-if';
 import {env, log, PluginError} from 'gulp-util';
@@ -13,18 +5,12 @@ import merge from 'merge2';
 import del from 'del'
 
 /*
-    clean, watch, default
-*/
-gulp.task('clean', () => del(['./dist/*']));
-gulp.task('watch', ['es5'], () => gulp.watch('./src/**/*', ['es5']));
-gulp.task('default', ['es5']);
-
-/*
     typescript: transpile to es6, with definitions and source maps.
 */
 import typescript from 'gulp-typescript';
 import sourcemaps from 'gulp-sourcemaps';
 const tsProject = typescript.createProject('tsconfig.json');
+const source = tsProject.config.include;
 const es6Out = tsProject.config.compilerOptions.outDir;
 const dtsOut = tsProject.config.compilerOptions.declarationDir;
 gulp.task('tsc', ['clean'], (cb) => {
@@ -46,17 +32,23 @@ gulp.task('tsc', ['clean'], (cb) => {
 });
 
 /*
-    babel: transpile es6 to es5, with sourcemaps and plugins (see package.json).
+    rollup: bundle es6 modules into a single file.
 */
-import babel from 'gulp-babel';
-import uglify from 'gulp-uglify';
-const es6In = es6Out + '/**/*.js';
-const es5Out = './dist/es5';
-gulp.task('es5', ['tsc'], (cb) => {
-    return gulp.src(es6In)
-        .pipe(sourcemaps.init({loadmaps: true}))
-        .pipe(babel())
-        .pipe(gulpIf(env.compress, uglify()))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(es5Out));
+import {rollup} from 'rollup';
+gulp.task('rollup', ['tsc'], (cb) => {
+    const config = {
+        dest: 'dist/es6/bundle.js',
+        format: 'es',
+        sourceMap: true
+    };
+
+    return rollup({entry: 'dist/es6/index.js'})
+        .then((bundle) => bundle.write(config));
 });
+
+/*
+    clean, watch, default
+*/
+gulp.task('clean', () => del(['./dist/*']));
+gulp.task('watch', ['rollup'], () => gulp.watch(source, ['rollup']));
+gulp.task('default', ['rollup']);
