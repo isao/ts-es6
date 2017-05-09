@@ -8,7 +8,6 @@ import del from 'del'
 const sourcemapsOn = !env.hasOwnProperty('sourcemaps') || env.sourcemaps;
 const minifyOn = env.minify;
 
-
 /*
     Transpile to es6, with type definitions, and source maps.
 */
@@ -38,7 +37,6 @@ gulp.task('typescript', ['clean'], (cb) => {
     ]);
 });
 
-
 /*
     Bundle es6 modules into a single file.
 */
@@ -52,7 +50,6 @@ const output = {
 gulp.task('bundle', ['typescript'],
     (cb) => rollup({entry}).then((bundle) => bundle.write(output))
 );
-
 
 /*
     Transpile es6 to es5, and optionally compress it.
@@ -68,7 +65,6 @@ gulp.task('es5', ['bundle'], (cb) => {
         .pipe(gulp.dest(destDir));
 });
 
-
 /*
     clean, watch, default, help.
 */
@@ -79,11 +75,15 @@ gulp.task('help', () => log(`
 Tasks (default is "bundle"):
     typescript      Transpile Typescript to ES2015 (ES6).
     bundle          Bundle ES2015 modules into a single file.
-    es5             Transpile ES2015 the bundle into ES5.
+    es5             Transpile ES2015 the bundle into ES5, optionally minify.
+    watch           Watch for source file changes and re-run tasks.
 
 Options:
-    --sourcemaps    Enable sourcemaps (enabled by default).
+    --sourcemaps    Create external sourcemap files (enabled by default).
     --minify        Compress the output bundle (disabled by default).
 
 The paths to the input and output files are in tsconfig.json.
 `));
+
+// Alias "build" to "es5".
+gulp.task('build', ['es5']);
