@@ -2,19 +2,21 @@
     "compilerOptions": {
         "alwaysStrict": true,
         "declaration": true,
-        "declarationDir": "dist/dts",
+        "declarationDir": "dist/dts/",
         "diagnostics": true,
         "experimentalDecorators": true,
         "listEmittedFiles": true,
         "module": "es2015",
         "moduleResolution": "node",
         "noImplicitAny": true,
-        "outDir": "dist/es6",
+        "outDir": "dist/es6/",
         "sourceMap": true,
         "target": "es2015"
     },
     "exclude": ["node_modules"],
-    "include": [
-        "src/**/*"
-    ],
+    "include": ["src/**/*"],
+    "gulpOptions": {
+        "entry": "dist/es6/index.js", // Output file created by rollupjs.
+        "destDir": "dist/"
+    }
 }

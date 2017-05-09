@@ -10,7 +10,8 @@ import del from 'del'
 import typescript from 'gulp-typescript';
 import sourcemaps from 'gulp-sourcemaps';
 const tsProject = typescript.createProject('tsconfig.json');
-const source = tsProject.config.include;
+
+const sources = tsProject.config.include;
 const es6Out = tsProject.config.compilerOptions.outDir;
 const dtsOut = tsProject.config.compilerOptions.declarationDir;
 gulp.task('tsc', ['clean'], (cb) => {
@@ -35,15 +36,14 @@ gulp.task('tsc', ['clean'], (cb) => {
     rollup: bundle es6 modules into a single file.
 */
 import {rollup} from 'rollup';
+const {entry, destDir} = tsProject.config.gulpOptions;
+const output = {
+    dest: entry,
+    format: 'es',
+    sourceMap: true,
+};
 gulp.task('rollup', ['tsc'], (cb) => {
-    const config = {
-        dest: 'dist/es6/bundle.js',
-        format: 'es',
-        sourceMap: true
-    };
-
-    return rollup({entry: 'dist/es6/index.js'})
-        .then((bundle) => bundle.write(config));
+    return rollup({entry}).then((bundle) => bundle.write(output));
 });
 
 /*
@@ -52,18 +52,18 @@ gulp.task('rollup', ['tsc'], (cb) => {
 import babel from 'gulp-babel';
 import uglify from 'gulp-uglify';
 gulp.task('es5', ['rollup'], (cb) => {
-    gulp.src('dist/es6/bundle.js')
+    gulp.src(entry)
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(babel())
         .pipe(gulpIf(env.compress, uglify()))
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest(destDir));
 });
 
 
 /*
     clean, watch, default
 */
-gulp.task('clean', () => del(['./dist/*']));
-gulp.task('watch', ['rollup'], () => gulp.watch(source, ['rollup']));
+gulp.task('clean', () => del([destDir + '/*']));
+gulp.task('watch', ['rollup'], () => gulp.watch(sources, ['rollup']));
 gulp.task('default', ['rollup']);
