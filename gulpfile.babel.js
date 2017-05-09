@@ -75,7 +75,7 @@ gulp.task('help', () => log(`
 Tasks (default is "bundle"):
     typescript      Transpile Typescript to ES2015 (ES6).
     bundle          Bundle ES2015 modules into a single file.
-    es5             Transpile ES2015 the bundle into ES5, optionally minify.
+    es5             Transpile the ES2015 bundle to ES5, optionally minify.
     watch           Watch for source file changes and re-run tasks.
 
 Options:

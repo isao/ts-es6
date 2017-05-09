@@ -1,23 +1,23 @@
 {
     "compilerOptions": {
-        "alwaysStrict": true,
         "declaration": true,
         "declarationDir": "dist/dts/",
-        "diagnostics": true,
         "experimentalDecorators": true,
-        "listEmittedFiles": true,
+        "lib": ["ES6", "WebWorker"],
         "module": "es2015",
         "moduleResolution": "node",
-        "noImplicitAny": true,
+        "newLine": "lf",
         "noUnusedLocals": true,
         "outDir": "dist/es6/",
         "pretty": true,
         "sourceMap": true,
+        "strict": true, // v2.3: alwaysStrict, noImplicitAny, strictNullChecks, noImplicitThis
         "target": "es2015"
     },
     "exclude": ["node_modules"],
     "include": ["src/**/*"],
-    "gulpOptions": {
+
+    "gulpOptions": { // Only used by the gulp tasks.
         "entry": "dist/es6/index.js", // Output file created by rollupjs.
         "destDir": "dist/"
     }
